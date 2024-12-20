@@ -3,7 +3,7 @@
   "runtimeVersion": "7",
   "display": {
     "title": "Angzaar Arts & Shoppes",
-    "description": "Build for DCL in DCL",
+    "description": "Art and Shopping!",
     "navmapThumbnail": "images/scene-thumbnail.png",
     "favicon": "favicon_asset"
   },
@@ -100,5 +100,6 @@
   "featureToggles": {
     "voiceChat": "enabled",
     "portableExperiences": "enabled"
-  }
+  },
+  "name": "art-scene"
 }

@@ -57,6 +57,7 @@ function createEnvFlooring(){
     })
 }
 
+
 function triggeredMovement(){
     if(inside){
         // let videoPlayer = VideoPlayer.getMutableOrNull(videoEntity)

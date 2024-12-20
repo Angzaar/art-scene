@@ -5,12 +5,17 @@ import { addGalleryReservation, moveGalleryElevator, removeGalleryReservationObj
 import { addNewReservation, clearMainGallery, handleUpdate, initArtGallery, refreshMainGallery, removeReservation } from "./mainGallery"
 import { showNotification } from "./ui/NotificationPanel"
 import { NOTIFICATION_TYPES } from "./helpers/types"
+import { addShopReservation, initShops, updateShop, updateShops } from "./shops"
+import { createLotteryListeners } from "./lottery"
+import { createNPC, moveNPC } from "./npc"
 
-export let serverRoom:string = "angzaar_plaza"
+export let serverRoom:string = "angzaar_plaza_gallery"
+export let lotteryRoom:string = 'angzaar_plaza_lottery'
 export let localUserId: string
 export let localUser:any
 export let data:any
 export let colyseusRoom:Room
+export let colyseusLottery:Room | undefined
 
 export let connected:boolean = false
 export let sessionId:any
@@ -50,17 +55,48 @@ export async function colyseusConnect(data:any, token?:string, world?:any, islan
             if(code === 4010){
                 console.log('user was banned')
             }
+
+            if(code === 4999){
+
+            }
         })
         createServerListeners(room)
-        sendServerMessage('get-art-gallery', {})
+        // sendServerMessage('get-art-gallery', {})
+        // sendServerMessage('get-shops', {})
+
+        connect(lotteryRoom, data, token, world, island).then((room: Room) => {
+            console.log("Connected to lottery room");
+            colyseusLottery = room
+    
+            room.onLeave((code: number) => {
+                console.log('left lottery room with code', code)
+                connected = false
+                removeLottery()
+
+                if(code === 4010){
+                    console.log('user was banned')
+                }
+    
+                if(code === 4999){
+    
+                }
+            })
+            createLotteryListeners(room)
+        }).catch((err) => {
+            console.error('colyseus connection error', err)
+        });
     }).catch((err) => {
         console.error('colyseus connection error', err)
     });
 }
 
-export function sendServerMessage(type: string, data: any) {
+export function sendServerMessage(type: string, data: any, room?:Room) {
     try{
-        connected && colyseusRoom.send(type, data)
+        let sendRoom:Room
+        if(connected){
+            sendRoom = room ? room : colyseusRoom
+            sendRoom.send(type, data)
+        }
     }
     catch(e){
         console.log('error sending message to server', e)
@@ -107,37 +143,34 @@ function createServerListeners(room:Room){
         console.log('new-art-gallery-reservation' + ' received', info)
         addNewReservation(info)
     })
+
+    room.onMessage('update-shop', async (info:any)=>{
+        console.log('update-shop' + ' received', info)
+        updateShop(info)
+    })
     
-    
 
+    room.onMessage('get-shops', async (info:any)=>{
+        console.log('get-shops' + ' received', info)
+        updateShops(info)
+    })
 
-    // room.state.galleries.onAdd(async(gallery:any, key:string)=>{
-    //     console.log('gallery added', gallery)
+    room.onMessage('new-shop-reservation', async (info:any)=>{
+        console.log('new-shop-reservation' + ' received', info)
+        addShopReservation(info)
+    })
 
-    //     if(gallery.elevator){
-    //         gallery.elevator.listen("y", (current:any, previous:any)=>{
-    //             // console.log('gallery elevator change', gallery.id, current)
-    //             moveGalleryElevator(gallery.id, current)
-    //         })
-    //     }
+    room.onMessage('move-npc', async (info:any)=>{
+        // console.log('move-npc' + ' received', info)
+        // moveNPC(info)
+    })
 
-    //     if(!gallery.reservation){
-    //         console.log('no reservation, add option to gallery')
-    //         addGalleryReservation(gallery.id)
-    //     }
+    room.state.npcs.onAdd((npc:any, id:string)=>{
+        console.log('new npc added', id, npc)
+        createNPC(npc)
+    })    
+}
 
-    //     gallery.listen("reservation",(current:any, previous:any)=>{
-    //         console.log('reservation changed', previous, current)
-    //         if(current !== undefined){
-    //             removeGalleryReservationObject(gallery.id)
-    //         }else{
-    //             if(previous !== undefined){
-    //                 if(previous.userId === localUserId){
-    //                     console.log('user reservation expired')
-    //                 }
-    //             }
-    //             addGalleryReservation(gallery.id)
-    //         }
-    //     })
-    // })
+function removeLottery(){
+    colyseusLottery = undefined
 }

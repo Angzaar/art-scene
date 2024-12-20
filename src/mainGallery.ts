@@ -278,7 +278,7 @@ export function handleUpdate(info:any){
     }
 }
 
-function removeVisibleComponents(info:any){
+export function removeVisibleComponents(info:any){
         // Transform.create(ent, {parent:parent})
         VideoPlayer.deleteFrom(info.parent)
 

@@ -11,15 +11,11 @@ import { joinServer, setLocalUserId } from './server'
 import { initStores } from './stores'
 import { initDominos } from './dominos'
 import { setupUi } from './ui/ui'
+import { initShops } from './shops'
 
 let admins:string[] = ["0xceba6b4186aae99bc8c3c467601bd344b1d62764"]
 
 export function main() {
-  initBuilding()
-  initGalleries()
-  initStores()
-  initDominos()
-
   getPreview().then(()=>{
     let data:any
     try{
@@ -31,7 +27,7 @@ export function main() {
 })
 }
 
-function checkPlayer(hardwareData:any){
+async function checkPlayer(hardwareData:any){
   let player = getPlayer()
   console.log('player is', player)
   if(!player){
@@ -41,7 +37,12 @@ function checkPlayer(hardwareData:any){
       }, 100)
   }
   else{
-      createPlayer(hardwareData, player)
+    await initBuilding()
+    await initStores()
+    await initDominos()
+    await initStores()
+    await initShops()
+    createPlayer(hardwareData, player)
   }
 }
 

@@ -1,6 +1,8 @@
 import { Color4, Quaternion, Vector3 } from "@dcl/sdk/math"
 import { SOUND_TYPES } from "./types"
 
+//npx sdk-commands deploy -t linker-server.decentraland.org --skip-validations true
+
 export let colorsLabels:string[] = [
     "Black",
     "Blue",
@@ -26,6 +28,19 @@ export let colors:Color4[] = [
     Color4.Yellow(),
     Color4.White(),
 ]
+
+
+export let dclColors:any = {
+    // transparent: Color4.create(0,0,0,0),//
+    uncommon: Color4.create(246/255, 121/255, 89/255),
+    common: Color4.create(188/255, 206/255, 206/255),
+    rare: Color4.create(65/255, 210/255, 124/255),
+    epic: Color4.create(74/255, 140/255, 234/255),
+    legendary: Color4.create(150/255, 67/255, 228/255),
+    exotic: Color4.create(.83, 1, .74),
+    mythic: Color4.create(247/255, 109/255, 226/255),
+    unique: Color4.create(250/255, 204/255, 32/255),
+}
 
 export let audiusMoodEndpoints:any = {
     Chill:[
@@ -66,8 +81,13 @@ export let audiusMoodEndpoints:any = {
     ],
 }
 
+export let models:any = {
+    gallery:"assets/gallery.glb",
+    galleryElevator:"assets/gallery-elevator.glb"//
+}
+
 export default {
-    DEBUG: false,
+    DEBUG: false, 
     allowNoWeb3:false,
 
     slug:"angzaar::art::gallery::",
@@ -79,7 +99,7 @@ export default {
         wsProd: "wss://angzaar-plaza.dcl-iwb.co/ws",
 
         deploymentTest: "http://localhost:3525",
-        deploymentProd: "https://deployment.dcl-iwb.co",
+        deploymentProd: "https://deployment.dcl-iwb.co",//
 
         toolsetTest: "http://localhost:3000",
         toolsetProd: "https://dcl-iwb.co/toolset/qa",
@@ -89,7 +109,10 @@ export default {
         assetSign: "/scene/sign",
         dclNamesGraph:"https://subgraph.decentraland.org/marketplace",
         dclLandGraph:"https://subgraph.decentraland.org/land-manager",
-        dclApi: "https://api.decentraland.org/v1/"
+        dclApi: "https://api.decentraland.org/v1/",
+
+        proxy:"https://lkdcl.co/dcl/proxy/?url=",
+        dclMarketplaceItem:"https://decentraland.org/marketplace/contracts/"
     },
     colors:{
         transparent: Color4.create(0,0,0,0),
@@ -633,4 +656,86 @@ scale:Vector3.create(2.5,8.3,1),
 move:{x:105.9, y:3, z:48.3},
 look:{x:11, y:17, z:56.5},
 aspect:'1:3.32'},
+]
+
+
+export let storeConfigs:any = [
+    {
+        position:Vector3.create(-8,0,8),
+        rotation:Quaternion.fromEulerDegrees(0,90,0),
+        id:1,
+    },
+    {
+        position:Vector3.create(-8,0,-24),
+        rotation:Quaternion.fromEulerDegrees(0,90,0),
+        id:2
+    },
+    {
+        position:Vector3.create(-8,0,-40),
+        rotation:Quaternion.fromEulerDegrees(0,90,0),
+        id:3
+    },
+
+    {
+        position:Vector3.create(40,0,-8),
+        rotation:Quaternion.fromEulerDegrees(0,180,0),
+        id:4
+    },
+    {
+        position:Vector3.create(24,0,-8),
+        rotation:Quaternion.fromEulerDegrees(0,180,0),
+        id:5
+    },
+    {
+        position:Vector3.create(24,0,-40),
+        rotation:Quaternion.fromEulerDegrees(0,0,0),
+        id:6
+    },
+    {
+        position:Vector3.create(40,0,-40),
+        rotation:Quaternion.fromEulerDegrees(0,0,0),
+        id:7
+    },
+
+    {
+        position:Vector3.create(120,0,-40),
+        rotation:Quaternion.fromEulerDegrees(0,-90,0),
+        id:8
+    },
+
+    {
+        position:Vector3.create(120,0,-24),
+        rotation:Quaternion.fromEulerDegrees(0,-90,0),
+        id:9
+    },
+
+
+    // //upper deck
+
+    // {
+    //     position:Vector3.create(40,15,-40),
+    //     rotation:Quaternion.fromEulerDegrees(0,0,0)
+    // },
+    // {
+    //     position:Vector3.create(24,15,-40),
+    //     rotation:Quaternion.fromEulerDegrees(0,0,0)
+    // },
+
+    // {
+    //     position:Vector3.create(40,30,-40),
+    //     rotation:Quaternion.fromEulerDegrees(0,0,0)
+    // },
+    // {
+    //     position:Vector3.create(24,30,-40),
+    //     rotation:Quaternion.fromEulerDegrees(0,0,0)
+    // }
+]
+
+export let storeImageLocations:any = [
+    {scale:Vector3.create(3,3,1), position:Vector3.create(6.85,2,4.3), rotation:Quaternion.fromEulerDegrees(0,90,0)},
+    {scale:Vector3.create(3,3,1), position:Vector3.create(6.85,2,-4.3), rotation:Quaternion.fromEulerDegrees(0,90,0)},
+    {scale:Vector3.create(3,3,1), position:Vector3.create(4.4,2,-6.8), rotation:Quaternion.fromEulerDegrees(0,180,0)},
+    {scale:Vector3.create(3,3,1), position:Vector3.create(-4.4,2,-6.8), rotation:Quaternion.fromEulerDegrees(0,180,0)},
+    {scale:Vector3.create(3,3,1), position:Vector3.create(-6.85,2,-4.3), rotation:Quaternion.fromEulerDegrees(0,270,0)},
+    {scale:Vector3.create(3,3,1), position:Vector3.create(-6.85,2,4.3), rotation:Quaternion.fromEulerDegrees(0,270,0)},
 ]

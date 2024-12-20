@@ -20,13 +20,14 @@ let displayedMonth: number = new Date().getMonth() // 0-based (0 = January)
 let selectedDays: string[] = [] // List of selected days in YYYY-MM-DD format
 let selectedHours: number[] = [] // List of selected days in YYYY-MM-DD format
 let selectedDay:string = ""
+let locationId = ""
 
 
 let buttons:any[] = [
     {label:"Confirm Reservation", pressed:false, func:()=>{
         const timestamp = getStartOfDayTimestampUTC(new Date(selectedDays[0]))
 
-        sendServerMessage('art-gallery-reservation', {locationId:'main', startDate:timestamp, length:selectedDays.length})
+        sendServerMessage(locationId === "main" ? 'art-gallery-reservation' :  'shop-reservation', {locationId:locationId, startDate:timestamp, length:selectedDays.length})
         showReservationPopup(false)
         selectedDays.length = 0
         },
@@ -41,19 +42,14 @@ let buttons:any[] = [
 }
 ]
 
-// export function updateSelectedLocation(id:number){
-//     selectedLocationId = id
-//     selectedLocation = locationsMap.get(id)
-//     let size = calculateSquareSize(selectedLocation.parcels) 
-//     locationSize = "" + size + "x" + size
-// }//
-
-export function showReservationPopup(value:boolean){
+export function showReservationPopup(value:boolean, id?:any){
     show = value
 
     if(show){
       view = "calendar"
       selectedHours.length = 0
+      selectedDays.length = 0
+      locationId = id
     }
 }
 

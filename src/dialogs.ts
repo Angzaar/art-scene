@@ -10,7 +10,7 @@ export let welcomeDialog: Dialog[] = [
 		buttons: [
             { label: `Reserve`, goToDialog:-1, triggeredActions:()=>{
 				showDialogPanel(false)
-                showReservationPopup(true)
+                showReservationPopup(true, "main")
 			} },
             { label: `Close`, goToDialog:-1, triggeredActions:()=>{
 				showDialogPanel(false)

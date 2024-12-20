@@ -7,6 +7,11 @@ import { uiSizer } from './helpers'
 import { createLogo } from './logo'
 import { createReservationAdmin } from './reservationAdmin'
 import { createReservationCalendar } from './calendar'
+import { createStoreUI } from './createStoreUI'
+import { createChanceUI } from './editChance'
+import { creatorChanceUI } from './createChanceUI'
+import { createPlayChanceUI } from './createPlayChanceUI'
+import { createSkinnyVerticalPanel } from './confirmMana'
 
 export function setupUi() {
   ReactEcsRenderer.setUiRenderer(uiComponent)
@@ -19,5 +24,10 @@ export let uiComponent = () => [
   createNotificationUI(),
   createLogo(),
   createReservationAdmin(),
-  createReservationCalendar()
+  createReservationCalendar(),
+  createStoreUI(),
+  createChanceUI(),
+  creatorChanceUI(),
+  createPlayChanceUI(),
+  createSkinnyVerticalPanel()
 ]

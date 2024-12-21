@@ -46,7 +46,6 @@ export function createNPC(npc:any){
 }
 
 export function moveNPC(id:any){
-    console.log('moving npc', id)
     let npc = colyseusRoom.state.npcs.get(id)
     if(!npc){
         console.log('no npc found')

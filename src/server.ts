@@ -8,6 +8,7 @@ import { NOTIFICATION_TYPES } from "./helpers/types"
 import { addShopReservation, initShops, updateShop, updateShops } from "./shops"
 import { createLotteryListeners } from "./lottery"
 import { createNPC, moveNPC } from "./npc"
+import { addCustomItems, deleteCustomItem, updateCustomItem } from "./custom"
 
 export let serverRoom:string = "angzaar_plaza_gallery"
 export let lotteryRoom:string = 'angzaar_plaza_lottery'
@@ -61,7 +62,8 @@ export async function colyseusConnect(data:any, token?:string, world?:any, islan
             }
         })
         createServerListeners(room)
-        // sendServerMessage('get-art-gallery', {})
+        sendServerMessage('get-art-gallery', {})
+        sendServerMessage('get-custom-items', {})
         // sendServerMessage('get-shops', {})
 
         connect(lotteryRoom, data, token, world, island).then((room: Room) => {
@@ -162,7 +164,27 @@ function createServerListeners(room:Room){
 
     room.onMessage('move-npc', async (info:any)=>{
         // console.log('move-npc' + ' received', info)
-        // moveNPC(info)
+        // moveNPC(info)//
+    })
+
+    room.onMessage('get-custom-items', async (info:any)=>{
+        console.log('get-custom-items' + ' received', info)
+        addCustomItems(info)
+    })
+
+    room.onMessage('custom-item-update', async (info:any)=>{
+        console.log('custom-item-update' + ' received', info)
+        updateCustomItem(info)
+    })
+
+    room.onMessage('custom-item-add', async (info:any)=>{
+        console.log('custom-item-add' + ' received', info)
+        addCustomItems([info])
+    })
+
+    room.onMessage('custom-item-delete', async (info:any)=>{
+        console.log('custom-item-delete' + ' received', info)
+        deleteCustomItem(info)
     })
 
     room.state.npcs.onAdd((npc:any, id:string)=>{

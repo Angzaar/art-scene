@@ -83,11 +83,11 @@ export let audiusMoodEndpoints:any = {
 
 export let models:any = {
     gallery:"assets/gallery.glb",
-    galleryElevator:"assets/gallery-elevator.glb"//
+    galleryElevator:"assets/gallery-elevator.glb"
 }
 
 export default {
-    DEBUG: false, 
+    DEBUG: true,//
     allowNoWeb3:false,
 
     slug:"angzaar::art::gallery::",
@@ -99,7 +99,7 @@ export default {
         wsProd: "wss://angzaar-plaza.dcl-iwb.co/ws",
 
         deploymentTest: "http://localhost:3525",
-        deploymentProd: "https://deployment.dcl-iwb.co",//
+        deploymentProd: "https://deployment.dcl-iwb.co",
 
         toolsetTest: "http://localhost:3000",
         toolsetProd: "https://dcl-iwb.co/toolset/qa",

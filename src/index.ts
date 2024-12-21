@@ -53,7 +53,7 @@ function createPlayer(hardwareData:any, player:any){
         setupUi()
 
         if(admins.includes(playerData.userId)){
-          enableBuilderHUD(true)
+          enableBuilderHUD(true)//
         }
 
           // const sceneInfo = await getSceneInformation({})

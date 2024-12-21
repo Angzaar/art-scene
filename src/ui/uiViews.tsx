@@ -55,7 +55,7 @@ props:{
                 }
             },
             {
-                label:"Go back",
+                label:"Go back",//
                 func:()=>{
                     displaySkinnyVerticalPanel(false)
                     customFunction2()

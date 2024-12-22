@@ -1,5 +1,6 @@
-import { engine, Entity, GltfContainer, Rotate, Transform } from "@dcl/sdk/ecs"
-import { Quaternion } from "@dcl/sdk/math"
+import { engine, Entity, GltfContainer, Material, MeshRenderer, pointerEventsSystem, Rotate, Transform } from "@dcl/sdk/ecs"
+import { Color4, Quaternion, Vector3 } from "@dcl/sdk/math"
+import { sendServerMessage } from "../server"
 
 export let customItemsMap:Map<string, any> = new Map()
 export let customEntitiesToItemsMap:Map<Entity, any> = new Map()

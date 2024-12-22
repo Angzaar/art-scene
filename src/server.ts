@@ -9,6 +9,7 @@ import { addShopReservation, initShops, updateShop, updateShops } from "./shops"
 import { createLotteryListeners } from "./lottery"
 import { createNPC, moveNPC } from "./npc"
 import { addCustomItems, deleteCustomItem, updateCustomItem } from "./custom"
+import { handleNPCTabSelection, toggleGridItem } from "./admin"
 
 export let serverRoom:string = "angzaar_plaza_gallery"
 export let lotteryRoom:string = 'angzaar_plaza_lottery'
@@ -170,6 +171,16 @@ function createServerListeners(room:Room){
     room.onMessage('get-custom-items', async (info:any)=>{
         console.log('get-custom-items' + ' received', info)
         addCustomItems(info)
+    })
+
+    room.onMessage('npc-toggle-selection', async (info:any)=>{
+        console.log('npc-toggle-selection' + ' received', info)
+        handleNPCTabSelection(info)
+    })
+
+    room.onMessage('toggle-npc-grid', async (info:any)=>{
+        console.log('toggle-npc-grid' + ' received', info)
+        toggleGridItem(info)
     })
 
     room.onMessage('custom-item-update', async (info:any)=>{

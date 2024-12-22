@@ -87,7 +87,7 @@ export let models:any = {
 }
 
 export default {
-    DEBUG: true,//
+    DEBUG: false,
     allowNoWeb3:false,
 
     slug:"angzaar::art::gallery::",

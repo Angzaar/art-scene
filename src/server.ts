@@ -7,7 +7,7 @@ import { showNotification } from "./ui/NotificationPanel"
 import { NOTIFICATION_TYPES } from "./helpers/types"
 import { addShopReservation, initShops, updateShop, updateShops } from "./shops"
 import { createLotteryListeners } from "./lottery"
-import { createNPC, moveNPC } from "./npc"
+import { createNPC, moveNPC, removeNPC, startWalkingNPC, stopWalkingNPC, updateNPC } from "./npc"
 import { addCustomItems, deleteCustomItem, updateCustomItem } from "./custom"
 import { handleNPCTabSelection, toggleGridItem } from "./admin"
 
@@ -198,9 +198,37 @@ function createServerListeners(room:Room){
         deleteCustomItem(info)
     })
 
+    room.onMessage('npc-stop-walking', async (info:any)=>{
+        console.log('npc-stop-walking' + ' received', info)
+        stopWalkingNPC(info)
+    })
+
+    room.onMessage('npc-update', async (info:any)=>{
+        console.log('npc-update' + ' received', info)
+        updateNPC(info)
+    })
+
     room.state.npcs.onAdd((npc:any, id:string)=>{
         console.log('new npc added', id, npc)
         createNPC(npc)
+
+        npc.listen('canWalk', (current:any, previous:any)=>{
+            console.log('can walk changed', previous, current)
+            if(previous !== undefined){
+                if(previous){
+                    console.log('was walking, need to stop')
+                    // stopWalkingNPC(npc)
+                }else{
+                    console.log('was idle, need to walk')
+                    startWalkingNPC(npc)
+                }
+            }
+        })
+    })    
+
+    room.state.npcs.onRemove((npc:any, id:string)=>{
+        console.log('npc removed', id, npc)
+        removeNPC(npc)//
     })    
 }
 

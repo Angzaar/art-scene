@@ -10,7 +10,7 @@ let creatingGrid:boolean = false
 
 export function toggleGridItem(info:any){
     let gridData = gridEntities.find((grid:any)=> grid.x === info.x && grid.y === info.y)
-    console.log('found grid entity is', gridData)//
+    console.log('found grid entity is', gridData)
     if(!gridData){
         return
     }

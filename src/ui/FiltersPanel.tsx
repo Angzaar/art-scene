@@ -10,7 +10,7 @@ import { BigBackground } from './BigBackground';
 import { Color4 } from '@dcl/sdk/math';
 import { loading, pageNumber, resultItems, showStoreUI, updateFirstDropdown,updateBodyShape, updateWearableCategoryIndex, updateNetwork, updateSecondDropdown,updateStatusDropdown, updateResults, updateStorePage, updateStoreSkip, updateStoreSearch, generateRarityButtons, selectedItems, updateStoreView, selectedItemPage, updateSelectedItemPage } from './createStoreUI';
 import { CustomButton } from './CustomButton';
-import { showChance } from './editChance';
+import { showEditChance } from './editChance';
 
 let show = true
 
@@ -307,7 +307,7 @@ uiTransform={{
     label={"Edit CHANCE"}
     func={()=>{
         showStoreUI(false)
-        showChance(true)
+        showEditChance(true)
     }}
  />
 

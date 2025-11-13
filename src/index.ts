@@ -1,8 +1,6 @@
 import './polyfill'
 import { initBuilding } from './building'
 import { enableBuilderHUD } from './dcl-builder-hud/ui/builderpanel'
-import { initGalleries } from './galleries'
-import { getExplorerConfiguration } from '~system/EnvironmentApi'
 import { getPreview } from './helpers/functions'
 import {getPlayer} from "@dcl/sdk/players";
 import { utils } from "./helpers/libraries";
@@ -12,6 +10,8 @@ import { initStores } from './stores'
 import { initDominos } from './dominos'
 import { setupUi } from './ui/ui'
 import { initShops } from './shops'
+import { createAIAgentMachine } from './eliza'
+import { addQuest } from './questing';
 
 let admins:string[] = ["0xceba6b4186aae99bc8c3c467601bd344b1d62764"]
 
@@ -39,9 +39,9 @@ async function checkPlayer(hardwareData:any){
   else{
     await initBuilding()
     await initStores()
-    await initDominos()
-    await initStores()
-    await initShops()
+    // await initDominos()
+    // await initShops()
+    // await createAIAgentMachine()
     createPlayer(hardwareData, player)
   }
 }
@@ -66,6 +66,10 @@ function createPlayer(hardwareData:any, player:any){
           // await setRealm(sceneJson, hardwareData.clientUri)
 
           joinServer()
+
+
+
+          // addQuest()
       })
   }
 }

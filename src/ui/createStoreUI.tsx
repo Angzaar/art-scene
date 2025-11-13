@@ -79,13 +79,17 @@ let bodyShapes:any =[
 export async function showStoreUI(value:boolean){
     show = value
     if(show){
-        resultItems.length = 0
-        loading = true
-        await refreshItems()
-        visibleItems = paginateArray([...resultItems], pageNumber, 9)
+        await refreshStore()
     }else{
         resetFilters()
     }
+}
+
+export async function refreshStore(){
+    resultItems.length = 0
+    loading = true
+    await refreshItems()
+    visibleItems = paginateArray([...resultItems], pageNumber, 9)
 }
 
 export function createStoreUI() {
@@ -238,6 +242,7 @@ function resetFilters(){
     storGender = "all"
     storeSearch = ""
     storeRarities.length = 0
+    selectedItems.length = 0
     selectedItemPage = 1
 }
 
@@ -384,14 +389,19 @@ export function generateRarityButtons(){
     return arr
 }
 
-export async function updateResults(paginate?:boolean){
+export async function updateResults(paginate?:boolean, selectedFilter?:boolean){
     console.log('paginate', paginate)
     if(!paginate){
         await refreshItems()
     }
 
-    visibleItems = paginateArray([...resultItems], pageNumber, 9)
-    console.log('visible items are now', visibleItems)
+    if(selectedFilter){
+        visibleItems = paginateArray([...selectedItems], pageNumber, 9)
+        console.log('selected items are now', visibleItems)
+    }else{
+        visibleItems = paginateArray([...resultItems], pageNumber, 9)
+        console.log('visible items are now', visibleItems)
+    }
 
     storeView = "main"
     // marketplaceLoadingSpinner.hide()
@@ -413,11 +423,13 @@ export async function refreshItems(){
     }
 
     console.log('data is', data)
+    
     resultItems = [...data.data]
     loading = false
 }
 
 async function getData(url:string){
+    console.log('getting nft data')
     try{
       let response = await fetch(resources.DEBUG ? resources.endpoints.proxy + url : url)
       let json = await response.json()

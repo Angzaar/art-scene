@@ -17,8 +17,8 @@ export let uiViews:any[] = [
 {
 view:"Confirm_Mana",
 props:{
-    label:"Confirm Send Mana",
-    text:"To CHANCE it, you must send the required mana.",
+    label:"Confirm POLY Mana",
+    text:"To CHANCE it, you must send the required POLY mana.",
     // slug:"welcome-view",//
     // view:"welcome",
     buttons:[

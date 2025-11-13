@@ -1,5 +1,5 @@
-import { AvatarShape, EasingFunction, engine, MeshRenderer, Transform, Tween } from "@dcl/sdk/ecs";
-import { Quaternion, Vector3 } from "@dcl/sdk/math";
+import { AvatarShape, EasingFunction, engine, Entity, MeshRenderer, Transform, Tween } from "@dcl/sdk/ecs";
+import { Color4, Quaternion, Vector3 } from "@dcl/sdk/math";
 import { colyseusRoom } from "./server";
 import { utils } from "./helpers/libraries";
 
@@ -26,32 +26,48 @@ export function createNPC(npc:any){
             startWalkingNPC(npc)
         }
 
-        let wearables:any[] = [
-            'urn:decentraland:off-chain:base-avatars:f_eyes_00',
-            'urn:decentraland:off-chain:base-avatars:f_eyebrows_00',
-            'urn:decentraland:off-chain:base-avatars:f_mouth_00',
-          ]
-
-        if(npc.hs){
-            wearables.push(npc.hs)
-        }
-
-        npc.wearables.forEach((item:any)=>{
-            if(item.substring(0,3) === "urn"){
-                wearables.push(item)
-            }
-            else{
-                wearables.push("urn:decentraland:matic:collections-v2:" + item)
-            }
-        })
-    
-        AvatarShape.create(npc.entity,{
-            id: npc.id,
-            name: npc.dn ? npc.n : "",//
-            wearables: wearables,
-            emotes: []
-        })
+        updateBones(npc)
     }
+}
+
+export function updateNPCName(npc:any){
+    let as = AvatarShape.getMutableOrNull(npc.entity)
+    if(!as){
+        return
+    }
+    as.name = npc.n
+}
+
+export function updateBones(npc:any){
+    let wearables:any[] = [
+        'urn:decentraland:off-chain:base-avatars:f_eyes_00',
+        'urn:decentraland:off-chain:base-avatars:f_eyebrows_00',
+        'urn:decentraland:off-chain:base-avatars:f_mouth_00',
+      ]
+
+    if(npc.hs){
+        wearables.push(npc.hs)
+    }
+
+    npc.wearables.forEach((item:any)=>{
+        if(item.substring(0,3) === "urn"){
+            wearables.push(item)
+        }
+        else{
+            wearables.push("urn:decentraland:matic:collections-v2:" + item)//
+        }
+    })
+
+    AvatarShape.createOrReplace(npc.entity,{
+        id: npc.id,
+        name: npc.dn ? npc.n : "",
+        wearables: wearables,
+        bodyShape: npc.b === "M" ? "urn:decentraland:off-chain:base-avatars:BaseMale" :  "urn:decentraland:off-chain:base-avatars:BaseFemale",
+        emotes: [],
+        skinColor: Color4.create(npc.sc[0]/255, npc.sc[1]/255,npc.sc[2]/255),
+        hairColor: Color4.create(npc.hc[0]/255, npc.hc[1]/255,npc.hc[2]/255),
+        eyeColor: Color4.create(npc.ec[0]/255, npc.ec[1]/255,npc.ec[2]/255)
+    })
 }
 
 export function startWalkingNPC(npc:any){
@@ -82,11 +98,13 @@ export function moveNPC(id:any){
     Tween.createOrReplace(npc.entity, {
         mode: Tween.Mode.Move({
             start: Transform.get(npc.entity).position,
-            end: Vector3.add(Vector3.create(npc.x, 0.1, npc.y), Vector3.create(xOffset, 0, yOffset)),
+            end: Vector3.add(Vector3.create(npc.x, 0.1, npc.z), Vector3.create(xOffset, 0, yOffset)),
         }),
         duration: 1 * 1000,
         easingFunction: EasingFunction.EF_LINEAR,
     })
+
+    // console.log('moving npc', Vector3.add(Vector3.create(npc.x, 0.1, npc.z), Vector3.create(xOffset, 0, yOffset)))
 }
 
 export function updateNPC(info:any){
@@ -122,6 +140,7 @@ export function updateNPC(info:any){
                     transform.scale[axis] += (info.direction * info.modifier)
                     break;
             }
+            break;
             break;
     }
 }

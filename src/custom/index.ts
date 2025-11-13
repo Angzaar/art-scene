@@ -16,8 +16,10 @@ export function deleteCustomItem(id:any){
     customItemsMap.delete(id)
 }
 
-export function addCustomItems(items:any[]){
-    items.forEach((item:any)=>{
+export function addCustomItems(customItems:any){
+    console.log('custom items are ', customItems)
+
+    customItems.Items.forEach((item:any)=>{
         let ent = engine.addEntity()
         item.ent = ent
         customItemsMap.set(item.id, item)

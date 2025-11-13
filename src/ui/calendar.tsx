@@ -18,13 +18,14 @@ let view = "calendar"
 let displayedYear: number = new Date().getFullYear()
 let displayedMonth: number = new Date().getMonth() // 0-based (0 = January)
 let selectedDays: string[] = [] // List of selected days in YYYY-MM-DD format
-let selectedHours: number[] = [] // List of selected days in YYYY-MM-DD format
+let selectedHours: number[] = [] // List of selected days in YYYY-MM-DD format//
 let selectedDay:string = ""
 let locationId = ""
-
+let maxAllowedDays = 7
+let shopId:number = 0
 
 let buttons:any[] = [
-    {label:"Confirm Reservation", pressed:false, func:()=>{
+    {label:"Confirm", pressed:true, width:10, height:10, fontBigScreen:25, fontSmallScreen:20, func:()=>{
         const timestamp = getStartOfDayTimestampUTC(new Date(selectedDays[0]))
 
         sendServerMessage(locationId === "main" ? 'art-gallery-reservation' :  'shop-reservation', {locationId:locationId, startDate:timestamp, length:selectedDays.length})
@@ -35,7 +36,7 @@ let buttons:any[] = [
             return selectedDays.length > 0 ? true : false
         }
     },
-    {label:"Cancel", pressed:false, func:()=>{
+    {label:"Cancel", pressed:false,  width:10, height:10, fontBigScreen:25, fontSmallScreen:20, func:()=>{
         showReservationPopup(false)
         selectedDays.length = 0
     }
@@ -50,6 +51,15 @@ export function showReservationPopup(value:boolean, id?:any){
       selectedHours.length = 0
       selectedDays.length = 0
       locationId = id
+
+      console.log('id is', id)
+
+      if(id){
+        shopId = id
+        maxAllowedDays = 14
+      }else{
+        maxAllowedDays = 7
+      }
     }
 }
 
@@ -104,7 +114,7 @@ export function createReservationCalendar() {
                 width: '60%',
                 height: '10%',
             }}
-            uiText={{value:"Art Gallery Calendar", fontSize: sizeFont(40,30)}}
+            uiText={{value:maxAllowedDays === 14 ? "Shoppe " + shopId + " Calendar" : "Art Gallery Calendar", fontSize: sizeFont(40,30)}}
         />
 
 {/* <UiEntity
@@ -149,7 +159,10 @@ export function createReservationCalendar() {
                 width: '90%',
                 height: '15%',
             }}
-            uiText={{value:"Reservations grant you the ability to modify the banner images across the building and stream video content into the center.", fontSize: sizeFont(25,15)}}
+            uiText={{value:shopId !== 0 ?
+              "Reservations grant you the ability to modify the banner images, the mannequins, and the audio in the Shoppe building."
+              
+              : "Reservations grant you the ability to modify the banner images across the building and stream video content into the center.", fontSize: sizeFont(30,15)}}
         />
 
 <UiEntity
@@ -160,7 +173,18 @@ export function createReservationCalendar() {
                 width: '90%',
                 height: '10%',
             }}
-            uiText={{value:"**Premium reservations for longer periods will be activated later**", fontSize: sizeFont(25,15)}}
+            uiText={{value:"**Premium reservations for longer periods will be activated later**", fontSize: sizeFont(30,15)}}
+        />
+
+<UiEntity
+            uiTransform={{
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: '60%',
+                height: '10%',
+            }}
+            uiText={{value:"Maximum Days - " + maxAllowedDays, fontSize: sizeFont(40,20)}}
         />
 
 <UiEntity
@@ -286,7 +310,7 @@ export function generateButtons(data:any){
         arr.push(<IWBButton button={button} buttons={data.buttons} />)
     })
     return arr
-  }
+}
 
 // Function to check if a day can be selected
 const canSelectDay = (date: string) => {
@@ -295,8 +319,6 @@ const canSelectDay = (date: string) => {
   const firstDay = new Date(selectedDays[0])
   const lastDay = new Date(selectedDays[selectedDays.length - 1])
   const currentDay = new Date(date)
-
-  const maxAllowedDays = 7
 
   // Check if the new day is contiguous
   const isContiguous =

@@ -106,7 +106,7 @@ export function createDialogPanel(){
           display: currentDialog && currentDialog.dialogs.length > 0 && currentDialog.dialogs[currentDialog.index].name ? "flex" : "none"
         }}
         // uiBackground={{color:Color4.Red()}}
-        uiText={{value:"" + (currentDialog && currentDialog.dialogs.length > 0 && currentDialog.dialogs[currentDialog.index].name), fontSize:sizeFont(20,15), color:Color4.White(), textAlign:'middle-left'}}
+        uiText={{value:"" + (currentDialog && currentDialog.dialogs.length > 0 && currentDialog.dialogs[currentDialog.index].name), fontSize:sizeFont(30,15), color:Color4.White(), textAlign:'middle-left'}}
         />
 
         {/* dialog text */}
@@ -118,7 +118,7 @@ export function createDialogPanel(){
           flexDirection:'column',
         }}
         // uiBackground={{color:Color4.Green()}}
-            uiText={{value:"" + (currentDialog && currentDialog.dialogs.length > 0 && currentDialog.dialogs[currentDialog.index].text), fontSize:sizeFont(20,15), color:Color4.White(), textAlign:'top-left'}}
+            uiText={{value:"" + (currentDialog && currentDialog.dialogs.length > 0 && currentDialog.dialogs[currentDialog.index].text), fontSize:sizeFont(30,15), color:Color4.White(), textAlign:'top-left'}}
         />
 
         <UiEntity

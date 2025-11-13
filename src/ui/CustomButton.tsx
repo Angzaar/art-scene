@@ -11,12 +11,12 @@ export function CustomButton(props:any){
         <UiEntity
       key={resources.slug + "custom::button::" + props.label}
       uiTransform={{
-        display: props.customDisplay ? props.displayFunc ? "flex" : "none" : "flex",
+        display: props.customDisplay ? props.displayFunc() ? "flex" : "none" : "flex",
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          width: props.width ? props.width : calculateImageDimensions(7, getAspect(uiSizes.buttonPillBlue)).width,
-          height: props.height ? props.height : calculateImageDimensions(5, getAspect(uiSizes.buttonPillBlue)).height,
+          width: calculateImageDimensions(props.width ? props.width : 7, getAspect(uiSizes.buttonPillBlue)).width,
+          height: calculateImageDimensions(props.height ? props.height : 5, getAspect(uiSizes.buttonPillBlue)).height,
           margin: props.margin ? props.margin : {top:"1%", bottom:'1%'},
           positionType: props.positionType ? props.positionType : undefined,
           position: props.position ? props.position : undefined,

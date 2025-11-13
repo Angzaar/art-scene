@@ -1,0 +1,213 @@
+import ReactEcs, {Input, UiEntity} from '@dcl/sdk/react-ecs'
+import resources from '../../helpers/resources'
+import { CustomButton } from '../CustomButton'
+import { calculateImageDimensions, calculateSquareImageDimensions, getAspect, getImageAtlasMapping, sizeFont } from '../helpers'
+import { uiSizes } from '../uiConfig'
+import { creationPage, newAgent, paginateAgentCreation, totalSteps, updateNewAgent } from '../../eliza'
+import { Color4 } from '@dcl/sdk/math'
+import { view } from '../createElizaCreator'
+import { paginateArray } from '../../helpers/functions'
+
+let show = false
+let bio = ""
+let visibleItems:any[] = []
+let visibleIndex:number = 1
+
+export function showAgentBio(value:boolean){
+    show = value
+}
+
+export function AgentAdjectivesPage() {
+    return (
+        <UiEntity
+            key={resources.slug + "eliza::adjectives-ui"}
+            uiTransform={{
+                display: view === "Adjectives" ? 'flex' : 'none',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'flex-start',
+                width: '100%',
+                height:'100%'
+            }}
+        >
+
+<UiEntity
+uiTransform={{
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '65%',
+    height: '5%',
+    margin:{bottom:'1%', top:'5%'}
+}}
+uiText={{value:"A.I. Adjectives", fontSize:sizeFont(35,25)}}
+/>
+
+<UiEntity
+uiTransform={{
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '85%',
+    height: '5%',
+    margin:{bottom:'1%', top:'2%'}
+}}
+uiText={{value:"Words that describe the character's traits and personality. Used for generating responses with consistent tone. Can be used in \"Mad Libs\" style content generation", fontSize:sizeFont(30,20)}}
+/>
+
+{/* input row */}
+<UiEntity
+uiTransform={{
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '95%',
+    height: '10%',
+    margin:{top:"1%", bottom:'1%'}
+}}
+>
+
+<UiEntity
+uiTransform={{
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '80%',
+    height: '100%',
+}}
+>
+<Input
+    uiTransform={{
+        width:'95%',
+        height:"100%",
+        margin:{top:"5%"}
+    }}
+    onChange={(e)=>{
+        bio = e.trim()
+    }}
+        onSubmit={(e) =>{ 
+            if(bio === ""){
+                return
+            }
+            updateNewAgent({adjectives: bio}, true)
+            bio = ""
+        }}
+        fontSize={sizeFont(25,20)}
+        uiBackground={{color:Color4.Black()}}
+        color={Color4.White()}
+        placeholder={"Enter new adjective"}
+        placeholderColor={Color4.White()}
+        />
+</UiEntity>
+
+<UiEntity
+uiTransform={{
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '20%',
+    height: '100%',
+}}
+>
+<CustomButton
+        label={"Add"}
+        width={5}
+        height={5}
+        func={()=>{
+            if(bio === ""){
+                return
+            }
+            updateNewAgent({adjectives: bio}, true)
+            bio = ""
+        }}
+    />
+</UiEntity>
+
+
+</UiEntity>
+
+
+{/* details rows */}
+<UiEntity
+uiTransform={{
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
+    width: '95%',
+    height: '60%',
+    flexWrap:'wrap'
+}}
+>
+{generateRows()}
+</UiEntity>
+
+
+        </UiEntity>
+    )
+}
+
+
+function generateRows(){
+    let arr:any[] = []
+    newAgent.adjectives.forEach((item:any, i:number)=>{
+        arr.push(
+            <UiEntity
+            uiTransform={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: '20%',
+                height: '14%',
+                margin:'0.1%'
+            }}
+            uiBackground={{color:Color4.create(129/255, 181/255, 235/255)}}
+            >
+
+<UiEntity
+    uiTransform={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '80%',
+        height: '100%',
+    }}
+    uiText={{value:item, fontSize:sizeFont(25,15), textAlign:'middle-center'}}
+    />
+
+<UiEntity
+    uiTransform={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '20%',
+        height: '100%',
+        margin:{right:'1%'}
+    }}
+    >
+        <UiEntity
+    uiTransform={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: calculateSquareImageDimensions(8).width,
+        height: calculateSquareImageDimensions(3.5).height
+    }}
+    uiBackground={{
+        textureMode: 'stretch',
+        texture: {
+            src: resources.textures.atlas1
+        },
+        uvs: getImageAtlasMapping(uiSizes.trashButton)
+    }}
+    onMouseDown={()=>{
+        newAgent.adjectives.splice(i, 1)
+    }}
+    />
+
+    </UiEntity>
+
+            </UiEntity>
+        )
+    })
+    return arr
+}

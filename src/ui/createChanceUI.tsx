@@ -1,5 +1,7 @@
 import ReactEcs, {UiEntity} from '@dcl/sdk/react-ecs'
 import {
+    calculateImageDimensions,
+    getAspect,
     getImageAtlasMapping,
     sizeFont
 } from './helpers';
@@ -11,22 +13,36 @@ import { showStoreUI } from './createStoreUI';
 import { addAnimator, paginateArray } from '../helpers/functions';
 import { lotteries } from '../lottery';
 import { colyseusLottery, localUserId, sendServerMessage } from '../server';
-import { showChance, updateEditChanceview } from './editChance';
+import { showEditChance, updateEditChanceview } from './editChance';
 import { displaySkinnyVerticalPanel } from './confirmMana';
 import { getView } from './uiViews';
+import { showCreateChanceUI } from './createNewChance';
+import { showSendChancItemsUI } from './sendChanceItems';
 
 let show = false
 export let loading = true
 
 export let yourChances:any[] = []
-export let yourChancesPage:number = 1//
+let visibleItems:any[] = []
+export let yourChancesPage:number = 1
 
 export async function showCreateChance(value:boolean){
     show = value
     yourChancesPage = 1
-    yourChances = paginateArray([...lotteries.filter((lottery:any)=> lottery.owner === localUserId)], yourChancesPage, 6)
+    visibleItems.length = 0
+    yourChances.length = 0
+    loading = true
+    colyseusLottery?.send('get-creator-chances', {})
+}
 
-    console.log('your chances', yourChances)
+export function updateUserChances(chances:any[]){
+    yourChances = chances
+    loading = false
+    updateVisibleItems()
+}
+
+function updateVisibleItems(){
+    visibleItems = paginateArray([...lotteries.filter((lottery:any)=> lottery.owner === localUserId)], yourChancesPage, 4)
 }
 
 export function creatorChanceUI() {
@@ -61,14 +77,53 @@ export function creatorChanceUI() {
             }}
         >
 
-        <CustomButton
+{/* loading chances */}
+<UiEntity
+            uiTransform={{
+                display:loading ? "flex": "none",
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: '100%',
+                height: '100%',
+            }}
+            uiBackground={{
+                textureMode: 'stretch',
+                texture: {
+                    src: 'images/atlas2.png',
+                },
+                uvs: getImageAtlasMapping(uiSizes.horizRectangle)
+            }}
+            uiText={{value:"LOADING...",fontSize:sizeFont(40,25)}}
+        ></UiEntity>
+
+{/* your chances screen */}
+<UiEntity
+            uiTransform={{
+                display: !loading ? "flex": "none",
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: '100%',
+                height: '100%',
+            }}
+            uiBackground={{
+                textureMode: 'stretch',
+                texture: {
+                    src: 'images/atlas2.png',
+                },
+                uvs: getImageAtlasMapping(uiSizes.horizRectangle)
+            }}
+        >
+
+<CustomButton
             margin={'1%'}
             positionType='absolute'
             position={{right:'5%', top:'5%'}}
             label={"Create"}
             func={()=>{
                 showCreateChance(false)
-                showStoreUI(true)
+                showCreateChanceUI(true)
             }}
             />
 
@@ -76,7 +131,7 @@ export function creatorChanceUI() {
             margin={'1%'}
             positionType='absolute'
             position={{left:'5%', bottom:'5%'}}
-            label={"Cancel"}
+            label={"Close"}
             func={()=>{
                 showCreateChance(false)
             }}
@@ -121,10 +176,22 @@ export function creatorChanceUI() {
                     flexDirection: 'row',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    width: '50%',
+                    width: '30%',
                     height: '15%',
                 }}
                 uiText={{value: "Name", textAlign:'middle-left', textWrap:'nowrap', fontSize:sizeFont(25,20)}}
+                />
+
+<UiEntity
+                uiTransform={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '10%',
+                    height: '15%',
+
+                }}
+                uiText={{value: "Items", textAlign:'middle-center', textWrap:'nowrap', fontSize:sizeFont(25,20)}}
                 />
 
 <UiEntity
@@ -147,7 +214,17 @@ export function creatorChanceUI() {
                     width: '10%',
                     height: '15%',
                 }}
-                uiText={{value: "% to Win", textAlign:'middle-center', textWrap:'nowrap', fontSize:sizeFont(25,20)}}
+                uiText={{value: "Win %", textAlign:'middle-center', textWrap:'nowrap', fontSize:sizeFont(25,20)}}
+                />
+<UiEntity
+                uiTransform={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '10%',
+                    height: '15%',
+                }}
+                uiText={{value: "Delay", textAlign:'middle-center', textWrap:'nowrap', fontSize:sizeFont(25,20)}}
                 />
 
 <UiEntity
@@ -171,12 +248,82 @@ export function creatorChanceUI() {
                 }}
                 uiText={{value: 'Status', textAlign:'middle-center', textWrap:'nowrap', fontSize:sizeFont(25,20)}}
                 >
-                </UiEntity>
+</UiEntity>
 
             </UiEntity>
 
             {generateYourChances()}
+
+
+{/* paginate buttons column */}
+<UiEntity
+            uiTransform={{
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'flex-start',
+                justifyContent: 'center',
+                width: '30%',
+                height: '10%',
+                positionType:'absolute',
+                position:{bottom:'1%', right:'1%'}
+            }}
+            >
+
+                                {/* scroll up button */}
+                                <UiEntity
+                    uiTransform={{
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        width: calculateImageDimensions(2, getAspect(uiSizes.leftArrowBlack)).width,
+                        height: calculateImageDimensions(2, getAspect(uiSizes.leftArrowBlack)).height,
+                        margin: {left: "5%"},
+                    }}
+                    // uiBackground={{color:Color4.White()}}
+                    uiBackground={{
+                        textureMode: 'stretch',
+                        texture: {
+                            src: resources.textures.atlas2
+                        },
+                        uvs: getImageAtlasMapping(uiSizes.leftArrowBlack)
+                    }}
+                    onMouseDown={() => {
+                        if(yourChancesPage -1 >= 1){
+                            yourChancesPage = 1
+                            updateVisibleItems()
+                        }
+                    }}
+                />
+
+                {/* scroll down button */}
+                <UiEntity
+                    uiTransform={{
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        width: calculateImageDimensions(2, getAspect(uiSizes.rightArrowBlack)).width,
+                        height: calculateImageDimensions(2, getAspect(uiSizes.rightArrowBlack)).height,
+                        margin: {right: "1%"},
+                    }}
+                    uiBackground={{
+                        textureMode: 'stretch',
+                        texture: {
+                            src: resources.textures.atlas2
+                        },
+                        uvs: getImageAtlasMapping(uiSizes.rightArrowBlack)
+                    }}
+                    onMouseDown={() => {
+                        yourChancesPage++
+                        updateVisibleItems()
+                    }}
+                />
+
+
+</UiEntity>
+
     </UiEntity>
+</UiEntity>
+
         </UiEntity>
         </UiEntity>
     )
@@ -184,8 +331,7 @@ export function creatorChanceUI() {
 
 function generateYourChances(){
     let arr:any[] = []
-    let count = 0
-    yourChances.forEach((chance:any)=>{
+    visibleItems.forEach((chance:any)=>{
         arr.push(
             <UiEntity
                 uiTransform={{
@@ -203,10 +349,22 @@ function generateYourChances(){
                     flexDirection: 'row',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    width: '50%',
+                    width: '30%',
                     height: '15%',
                 }}
                 uiText={{value: "" + chance.name, textAlign:'middle-left', textWrap:'nowrap', fontSize:sizeFont(25,20)}}
+                />
+
+<UiEntity
+                uiTransform={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '10%',
+                    height: '15%',
+
+                }}
+                uiText={{value: "" + chance.items.length, textAlign:'middle-center', textWrap:'nowrap', fontSize:sizeFont(25,20)}}
                 />
 
 <UiEntity
@@ -240,7 +398,18 @@ function generateYourChances(){
                     width: '10%',
                     height: '15%',
                 }}
-                uiText={{value: "" + chance.chances, textAlign:'middle-center', textWrap:'nowrap', fontSize:sizeFont(25,20)}}
+                uiText={{value: "" + (chance.cooldown + " " + (chance.cooldownType == 0 ? "min" : "hrs")), textAlign:'middle-center', textWrap:'nowrap', fontSize:sizeFont(25,20)}}
+                />
+
+<UiEntity
+                uiTransform={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '10%',
+                    height: '15%',
+                }}
+                uiText={{value: "" + chance.chances.length, textAlign:'middle-center', textWrap:'nowrap', fontSize:sizeFont(25,20)}}
                 />
 
 <UiEntity
@@ -259,8 +428,9 @@ function generateYourChances(){
                     label={"Send NFTs"}
                     func={()=>{
                         showCreateChance(false)
-                        showChance(true)
-                        updateEditChanceview('sending', chance)
+                        // showEditChance(true)
+                        showSendChancItemsUI(true, chance, true)
+                        // updateEditChanceview('sending', chance)
                     }}
                     />
                     : 

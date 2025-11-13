@@ -299,7 +299,7 @@ export function removeVisibleComponents(info:any){
 }
 
 export function updateLocationMaterial(info:any){
-    removeVisibleComponents(info)
+    // removeVisibleComponents(info)
 
     if(!info.v){
         return
@@ -342,16 +342,28 @@ export function updateLocationMaterial(info:any){
             MeshRenderer.setPlane(info.parent)
             MeshCollider.setPlane(info.parent)
 
-            Material.setPbrMaterial(info.parent, {
-                texture: Material.Texture.Common({
-                    src: '' + info.src,
-                }),
-                emissiveColor:Color4.White(),
-                emissiveIntensity:1,
-                emissiveTexture:Material.Texture.Common({
-                    src: '' + info.src,
-                }),
-            })
+            if(!info.hasOwnProperty("m") || info.m === 1){
+                console.log('setting pbr material')
+                Material.setPbrMaterial(info.parent, {
+                    texture: Material.Texture.Common({
+                        src: '' + info.src,
+                    }),
+                    emissiveColor:Color4.White(),
+                    emissiveIntensity:1,
+                    emissiveTexture:Material.Texture.Common({
+                        src: '' + info.src,
+                    }),
+                })
+            }else{
+                console.log('setting basic material')
+                Material.setBasicMaterial(info.parent, {
+                    texture: Material.Texture.Common({
+                        src: '' + info.src,
+                    }),
+                })
+            }
+
+            
 
             if(info.c){
                 pointerEventsSystem.onPointerDown({entity:info.parent, opts:{

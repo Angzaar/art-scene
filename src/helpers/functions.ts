@@ -1,5 +1,5 @@
 import { getRealm } from "~system/Runtime";
-import {Animator, engine, Entity, Transform} from "@dcl/sdk/ecs";
+import {Animator, engine, Entity, Material, MaterialTransparencyMode, MeshRenderer, Transform} from "@dcl/sdk/ecs";
 import { ReadOnlyVector3 } from "~system/EngineApi";
 import { DEG2RAD, Quaternion, Vector3 } from "@dcl/sdk/math";
 import { eth, utils } from "./libraries";
@@ -9,6 +9,7 @@ import { eth, utils } from "./libraries";
 import { CHAIN_TYPE, NFT_TYPES } from "./types";
 import { createEthereumProvider } from '@dcl/sdk/ethereum-provider'
 import { abi1155, abi721 } from "../helpers/abis"
+import resources from "./resources";
 
 
 export function paginateArray(array:any[], page:number, itemsPerPage:number){
@@ -288,4 +289,24 @@ export function getStartOfDayTimestampUTC(date: Date): number {
 
   // Convert to Unix timestamp (milliseconds divided by 1000 to get seconds)
   return Math.floor(startOfDayUTC.getTime() / 1000);
+}
+
+export async function randomImage(entity:Entity, type:string){
+  try{
+      let url = resources.endpoints.dclMarketplaceEndpoint + "catalog?first=1000&category="+type+"&sortBy=newest"
+      let response = await fetch(resources.DEBUG ? resources.endpoints.proxy + url : url)
+      let itemsJson = await response.json()
+      let randomItemIndex = getRandomIntInclusive(0, itemsJson.data.length - 1)
+      console.log('random item is', itemsJson.data[randomItemIndex])
+      Material.setPbrMaterial(entity, {
+        texture:Material.Texture.Common({
+          src: '' + itemsJson.data[randomItemIndex].thumbnail,
+        }),
+      transparencyMode:MaterialTransparencyMode.MTM_ALPHA_BLEND
+      })
+    }
+    catch(e){
+      console.log('get store data error', e)
+      MeshRenderer.deleteFrom(entity)
+    }
 }

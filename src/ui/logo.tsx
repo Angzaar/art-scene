@@ -9,6 +9,8 @@ import {
 import resources from '../helpers/resources';
 import { uiSizes } from './uiConfig';
 import { showingAdminPanel, showReservationAdminPanel, updateLocations } from './reservationAdmin';
+import { userShopReservation } from '../shops';
+import { showingShopAdminPanel, showShopReservationAdminPanel } from './shopReservationAdmin';
 
 let show = false
 
@@ -33,11 +35,17 @@ export function createLogo() {
             uiBackground={{
                 textureMode: 'stretch',
                 texture: {
-                    src: 'images/icon_outline.png',
+                    src: 'images/icon_outline.png',//
                 }
             }}
             onMouseDown={()=>{
-                showReservationAdminPanel(!showingAdminPanel)
+                console.log(userShopReservation)
+                if(userShopReservation || userShopReservation !== undefined){
+                    showShopReservationAdminPanel(!showingShopAdminPanel)
+                    return
+                }else{
+                    showReservationAdminPanel(!showingAdminPanel)
+                }
             }}
         >
 

@@ -1,6 +1,7 @@
 import { Color4, Quaternion, Vector3 } from "@dcl/sdk/math"
 import { SOUND_TYPES } from "./types"
 
+
 //npx sdk-commands deploy -t linker-server.decentraland.org --skip-validations true
 
 export let colorsLabels:string[] = [
@@ -39,7 +40,7 @@ export let dclColors:any = {
     legendary: Color4.create(150/255, 67/255, 228/255),
     exotic: Color4.create(.83, 1, .74),
     mythic: Color4.create(247/255, 109/255, 226/255),
-    unique: Color4.create(250/255, 204/255, 32/255),
+    unique: Color4.create(250/255, 204/255, 32/255),//
 }
 
 export let audiusMoodEndpoints:any = {
@@ -112,7 +113,17 @@ export default {
         dclApi: "https://api.decentraland.org/v1/",
 
         proxy:"https://lkdcl.co/dcl/proxy/?url=",
-        dclMarketplaceItem:"https://decentraland.org/marketplace/contracts/"
+        dclMarketplaceItem:"https://decentraland.org/marketplace/contracts/",
+        dclMarketplaceEndpoint:"https://marketplace-api.decentraland.org/v2/",
+
+
+        gitpod: "https://3000-lastraum-elizafork-liz7lamnu7u.ws-us117.gitpod.io/",
+        elizaLocal: "http://localhost:6111/",
+        elizaProd:"https://lkdcl.co/eliza/",
+
+        elizaRoomLocal: "ws://localhost:4511",
+        elizaRoomProd: "wss://angzaar-plaza.dcl-iwb.co/eliza",
+
     },
     colors:{
         transparent: Color4.create(0,0,0,0),
@@ -357,6 +368,10 @@ export default {
             "https://audius-discovery-1.cultur3stake.com",
             "creatornode.audius3.prod-us-west-2.staked.cloud"
           ]
+    },
+
+    models:{
+        lottoBeam: '/assets/lootbeam_gold.glb'
     }
 }
 
@@ -658,7 +673,6 @@ look:{x:11, y:17, z:56.5},
 aspect:'1:3.32'},
 ]
 
-
 export let storeConfigs:any = [
     {
         position:Vector3.create(-8,0,8),
@@ -666,76 +680,143 @@ export let storeConfigs:any = [
         id:1,
     },
     {
-        position:Vector3.create(-8,0,-24),
+        position:Vector3.create(-8,0,-8),
         rotation:Quaternion.fromEulerDegrees(0,90,0),
         id:2
     },
     {
-        position:Vector3.create(-8,0,-40),
+        position:Vector3.create(-8,0,-24),
         rotation:Quaternion.fromEulerDegrees(0,90,0),
         id:3
+    },
+    {
+        position:Vector3.create(-8,0,-40),
+        rotation:Quaternion.fromEulerDegrees(0,90,0),
+        id:4
     },
 
     {
         position:Vector3.create(40,0,-8),
-        rotation:Quaternion.fromEulerDegrees(0,180,0),
-        id:4
+        rotation:Quaternion.fromEulerDegrees(0,90,0),
+        id:8
     },
     {
         position:Vector3.create(24,0,-8),
-        rotation:Quaternion.fromEulerDegrees(0,180,0),
-        id:5
+        rotation:Quaternion.fromEulerDegrees(0,-90,0),
+        id:7
     },
     {
         position:Vector3.create(24,0,-40),
-        rotation:Quaternion.fromEulerDegrees(0,0,0),
-        id:6
+        rotation:Quaternion.fromEulerDegrees(0,-90,0),
+        id:5
     },
     {
         position:Vector3.create(40,0,-40),
-        rotation:Quaternion.fromEulerDegrees(0,0,0),
-        id:7
+        rotation:Quaternion.fromEulerDegrees(0,90,0),
+        id:10
     },
 
     {
-        position:Vector3.create(120,0,-40),
+        position:Vector3.create(24,0,-24),
         rotation:Quaternion.fromEulerDegrees(0,-90,0),
-        id:8
+        id:6
     },
-
     {
-        position:Vector3.create(120,0,-24),
-        rotation:Quaternion.fromEulerDegrees(0,-90,0),
+        position:Vector3.create(40,0,-24),
+        rotation:Quaternion.fromEulerDegrees(0,90,0),
         id:9
     },
 
 
     // //upper deck
 
-    // {
-    //     position:Vector3.create(40,15,-40),
-    //     rotation:Quaternion.fromEulerDegrees(0,0,0)
-    // },
-    // {
-    //     position:Vector3.create(24,15,-40),
-    //     rotation:Quaternion.fromEulerDegrees(0,0,0)
-    // },
+    {
+        position:Vector3.create(40,15,-40),
+        rotation:Quaternion.fromEulerDegrees(0,0,0)
+    },
+    {
+        position:Vector3.create(24,15,-40),
+        rotation:Quaternion.fromEulerDegrees(0,0,0)
+    },
 
-    // {
-    //     position:Vector3.create(40,30,-40),
-    //     rotation:Quaternion.fromEulerDegrees(0,0,0)
-    // },
-    // {
-    //     position:Vector3.create(24,30,-40),
-    //     rotation:Quaternion.fromEulerDegrees(0,0,0)
-    // }
+    {
+        position:Vector3.create(40,30,-40),
+        rotation:Quaternion.fromEulerDegrees(0,0,0)
+    },
+    {
+        position:Vector3.create(24,30,-40),
+        rotation:Quaternion.fromEulerDegrees(0,0,0)
+    }
+]
+
+export let storeMannequins:any = [
+    {
+        name:"Mannequin", 
+        position:Vector3.create(1.5,0.4,0), rotation:Quaternion.fromEulerDegrees(0,90,0)
+    },
+    {
+        name:"Mannequin", 
+        position:Vector3.create(0, 0.87,-6.1), rotation:Quaternion.fromEulerDegrees(0,0,0)
+    },
+    {
+        name:"Mannequin", 
+        position:Vector3.create(0, 0.87,6.1), rotation:Quaternion.fromEulerDegrees(0,180,0)
+    },
+    {
+        name:"Mannequin", 
+        position:Vector3.create(1.7,7.4,0), rotation:Quaternion.fromEulerDegrees(0,90,0)
+    },
+    {
+        name:"Mannequin", 
+        position:Vector3.create(0.7,7.4,0), rotation:Quaternion.fromEulerDegrees(0,-90,0)
+    },
+    {
+        name:"Mannequin", 
+        position:Vector3.create(1.25,7.4,-1), rotation:Quaternion.fromEulerDegrees(0,180,0)
+    },
+    {
+        name:"Mannequin", 
+        position:Vector3.create(1.25,7.4,1), rotation:Quaternion.fromEulerDegrees(0,0,0)
+    }
 ]
 
 export let storeImageLocations:any = [
-    {scale:Vector3.create(3,3,1), position:Vector3.create(6.85,2,4.3), rotation:Quaternion.fromEulerDegrees(0,90,0)},
-    {scale:Vector3.create(3,3,1), position:Vector3.create(6.85,2,-4.3), rotation:Quaternion.fromEulerDegrees(0,90,0)},
-    {scale:Vector3.create(3,3,1), position:Vector3.create(4.4,2,-6.8), rotation:Quaternion.fromEulerDegrees(0,180,0)},
-    {scale:Vector3.create(3,3,1), position:Vector3.create(-4.4,2,-6.8), rotation:Quaternion.fromEulerDegrees(0,180,0)},
-    {scale:Vector3.create(3,3,1), position:Vector3.create(-6.85,2,-4.3), rotation:Quaternion.fromEulerDegrees(0,270,0)},
-    {scale:Vector3.create(3,3,1), position:Vector3.create(-6.85,2,4.3), rotation:Quaternion.fromEulerDegrees(0,270,0)},
+    {label:"Main Banner", scale:Vector3.create(8.3,4.5,1), position:Vector3.create(0,10.8,7.15), rotation:Quaternion.fromEulerDegrees(0,180,0)},
+    {label:"Lower Left 1", scale:Vector3.create(3,3,1), position:Vector3.create(6.85,2,4.3), rotation:Quaternion.fromEulerDegrees(0,90,0)},
+    {label:"Lower Left 2", scale:Vector3.create(3,3,1), position:Vector3.create(6.85,2,-4.3), rotation:Quaternion.fromEulerDegrees(0,90,0)},
+    {label:"Lower Back 1", scale:Vector3.create(3,3,1), position:Vector3.create(4.4,2,-6.8), rotation:Quaternion.fromEulerDegrees(0,180,0)},
+    {label:"Lower Back 2", scale:Vector3.create(3,3,1), position:Vector3.create(-4.4,2,-6.8), rotation:Quaternion.fromEulerDegrees(0,180,0)},
+    {label:"Lower Right 1", scale:Vector3.create(3,3,1), position:Vector3.create(-6.85,2,-4.3), rotation:Quaternion.fromEulerDegrees(0,270,0)},
+    {label:"Lower Right 2", scale:Vector3.create(3,3,1), position:Vector3.create(-6.85,2,4.3), rotation:Quaternion.fromEulerDegrees(0,270,0)},
+
+    {label:"Upper Left 1", scale:Vector3.create(3,3,1), position:Vector3.create(6.85,10,4.3), rotation:Quaternion.fromEulerDegrees(0,90,0)},
+    {label:"Upper Left 2", scale:Vector3.create(3,3,1), position:Vector3.create(6.85,10,-4.3), rotation:Quaternion.fromEulerDegrees(0,90,0)},
+    {label:"Upper Back 1", scale:Vector3.create(3,3,1), position:Vector3.create(4.4,10,-6.8), rotation:Quaternion.fromEulerDegrees(0,180,0)},
+    {label:"Upper Back 2", scale:Vector3.create(3,3,1), position:Vector3.create(-4.4,10,-6.8), rotation:Quaternion.fromEulerDegrees(0,180,0)},
+    {label:"Upper Right 1", scale:Vector3.create(3,3,1), position:Vector3.create(-6.85,10,-4.3), rotation:Quaternion.fromEulerDegrees(0,270,0)},
+    {label:"Upper Right 2", scale:Vector3.create(3,3,1), position:Vector3.create(-6.85,10,4.3), rotation:Quaternion.fromEulerDegrees(0,270,0)},
 ]
+
+export enum AspectRatio {
+    "1:1" = 1 / 1,
+    "2:1" = 2 / 1,
+    "2:3" = 2 / 3,
+    "3:2" = 3 / 2,
+    "4:5" = 4 / 5
+}
+
+export const AspectRatioSizes: Record<string, { width: number; height: number }> = {
+    "1:1": { width: 3, height: 3 },
+    "2:1": { width: 4, height: 2 },
+    "2:3": { width: 2, height: 3 },
+    "3:2": { width: 3, height: 2 },
+    "4:5": { width: 2.4, height: 3 }
+};
+
+export const MainBannerSizes: Record<string, { width: number; height: number }> = {
+    "1:1": { width: 4.5, height: 4.5 },
+    "2:1": { width: 8.3, height: 4.15 },
+    "2:3": { width: 3, height: 4.5 },
+    "3:2": { width: 6.85, height: 4.5 },
+    "4:5": { width: 3.6, height: 4.5 }
+};
